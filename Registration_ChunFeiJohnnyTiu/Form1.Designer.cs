@@ -167,6 +167,7 @@
             this.tb_PostalCode.Name = "tb_PostalCode";
             this.tb_PostalCode.Size = new System.Drawing.Size(176, 20);
             this.tb_PostalCode.TabIndex = 13;
+            this.tb_PostalCode.Validating += new System.ComponentModel.CancelEventHandler(this.tb_PostalCode_Validation);
             // 
             // tb_Country
             // 
@@ -181,6 +182,7 @@
             this.tb_Phone.Name = "tb_Phone";
             this.tb_Phone.Size = new System.Drawing.Size(176, 20);
             this.tb_Phone.TabIndex = 15;
+            this.tb_Phone.Validating += new System.ComponentModel.CancelEventHandler(this.tb_Phone_Validation);
             // 
             // btn_Reset
             // 
