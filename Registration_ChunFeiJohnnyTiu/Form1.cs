@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Registration_ChunFeiJohnnyTiu.FileManager;
 
 namespace Registration_ChunFeiJohnnyTiu
 {
@@ -26,7 +27,16 @@ namespace Registration_ChunFeiJohnnyTiu
         // Methods
         //-------------------------------------------------------------
 
-        // Clear All Text Method
+        // Delegate Declaration Custom Method
+        public delegate void submitAction(string s);
+
+        // Display String to Message Box Custom Method
+        public static void ShowStringToMessageBox(string s)
+        {
+            MessageBox.Show(s, "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        // Clear All Text Custom Method
         private void ClearAllText(Control con)
         {
             foreach (Control c in con.Controls)
@@ -38,7 +48,21 @@ namespace Registration_ChunFeiJohnnyTiu
             }
         }
 
-        // First Name Mandatory Validation
+        // Email Validator Custom Method
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        // First Name Mandatory Validation Method
         private void tb_FirstName_Validation(object sender, CancelEventArgs e)
         {
 
@@ -55,7 +79,7 @@ namespace Registration_ChunFeiJohnnyTiu
             }
         }
 
-        // Last Name Mandatory Validation
+        // Last Name Mandatory Validation Method
         private void tb_LastName_Validation(object sender, CancelEventArgs e)
         {
 
@@ -72,21 +96,7 @@ namespace Registration_ChunFeiJohnnyTiu
             }
         }
 
-        // Email Validator Method
-        private bool IsValidEmail(string email)
-        {
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        // Email Mandatory Validation
+        // Email Mandatory Validation Method
         private void tb_Email_Validation(object sender, CancelEventArgs e)
         {
 
@@ -111,7 +121,7 @@ namespace Registration_ChunFeiJohnnyTiu
             }
         }
 
-        // Postal Code Regex Validation
+        // Postal Code Regex Validation Method
         private void tb_PostalCode_Validation(object sender, CancelEventArgs e)
         {
             if (string.IsNullOrEmpty(tb_PostalCode.Text))
@@ -138,7 +148,7 @@ namespace Registration_ChunFeiJohnnyTiu
             }
         }
 
-        // Phone Number Regex Validation
+        // Phone Number Regex Validation Method
         private void tb_Phone_Validation(object sender, CancelEventArgs e)
         {
             if (string.IsNullOrEmpty(tb_Phone.Text))
@@ -165,15 +175,17 @@ namespace Registration_ChunFeiJohnnyTiu
             }
         }
 
-        // Reset Button Clicked
+        // Reset Button Clicked Event
         private void btn_Reset_Click(object sender, EventArgs e)
         {
+            // Clear Form
             ClearAllText(this);
         }
 
-        //Submit Button Clicked
+        //Submit Button Clicked Event
         private void btn_Submit_Click(object sender, EventArgs e)
         {
+            // Validation Conditions
             if (!ValidateChildren(ValidationConstraints.Enabled))
             {
                 MessageBox.Show("Please enter valid answers.", "Message", MessageBoxButtons.OK,
@@ -181,6 +193,24 @@ namespace Registration_ChunFeiJohnnyTiu
                 return;
             }
 
+            // Saving Values Into a Local File with Delegation
+            submitAction saveToFile = new submitAction(SaveStringToFile);
+            string regInfo = null;
+
+            foreach (Control c in Controls)
+            {
+                if (c is TextBox)
+                {
+                    saveToFile(((TextBox)c).Text + "\n");
+                    regInfo += ((TextBox)c).Text + "\n";
+                }
+            }
+
+            // Show String in Message Box with Delegation
+            submitAction showMessageBox = new submitAction(ShowStringToMessageBox);
+            showMessageBox(regInfo);
+
+            // Clear Form
             ClearAllText(this);
         }
     }

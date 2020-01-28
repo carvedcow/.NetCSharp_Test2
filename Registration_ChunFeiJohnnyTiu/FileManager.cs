@@ -14,7 +14,7 @@ namespace Registration_ChunFeiJohnnyTiu
 
         public static void SaveStringToFile(string s)
         {
-            using (fs = new FileStream("message.txt", FileMode.Append, FileAccess.Write))
+            using (fs = new FileStream("Registration.txt", FileMode.Append, FileAccess.Write))
             {
                 using (sw = new StreamWriter(fs))
                 {
